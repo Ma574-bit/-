@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สร้างบัญชี - ระบบแจ้งซ่อม</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .register-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 50px;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        
+        .register-header h1 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .register-header .icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .register-header p {
+            color: #999;
+            font-size: 1em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+        
+        .error-message {
+            background-color: #fee;
+            border-left: 4px solid #f44;
+            color: #c33;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .error-message::before {
+            content: "❌";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .success-message {
+            background-color: #efe;
+            border-left: 4px solid #0a0;
+            color: #0a0;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .success-message::before {
+            content: "✅";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .register-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            margin-top: 10px;
+        }
+        
+        .register-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .register-button:active {
+            transform: translateY(0);
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .login-link p {
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .login-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .login-link a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .password-requirements {
+            background: #f0f4ff;
+            border: 1px solid #dde6ff;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #555;
+        }
+        
+        .password-requirements ul {
+            margin: 5px 0 0 20px;
+            list-style: none;
+        }
+        
+        .password-requirements li {
+            margin: 3px 0;
+        }
+        
+        .password-requirements li::before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .required {
+            color: #f44;
+        }
+        
+        @media (max-width: 480px) {
+            .register-container {
+                padding: 30px 25px;
+            }
+            
+            .register-header h1 {
+                font-size: 1.5em;
+            }
+            
+            .register-header .icon {
+                font-size: 2.5em;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+            
+            .form-row .form-group {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-header">
+            <div class="icon">🔧</div>
+            <h1>สร้างบัญชี</h1>
+            <p>ระบบแจ้งซ่อมอุปกรณ์</p>
+        </div>
+
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+
+        {% if success %}
+        <div class="success-message">{{ success }}</div>
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="first_name">ชื่อ</label>
+                    <input 
+                        type="text" 
+                        id="first_name" 
+                        name="first_name" 
+                        placeholder="ชื่อของคุณ"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">นามสกุล</label>
+                    <input 
+                        type="text" 
+                        id="last_name" 
+                        name="last_name" 
+                        placeholder="นามสกุลของคุณ"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="username">ชื่อผู้ใช้ <span class="required">*</span></label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username" 
+                    placeholder="ชื่อผู้ใช้ (อย่างน้อย 4 ตัวอักษร)"
+                    required 
+                    autofocus
+                />
+                <div class="password-requirements">
+                    <ul>
+                        <li>ใช้ตัวอักษรเล็ก-ใหญ่ และตัวเลข</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">อีเมล <span class="required">*</span></label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="example@email.com"
+                    required 
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="password">รหัสผ่าน <span class="required">*</span></label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    placeholder="รหัสผ่าน (อย่างน้อย 6 ตัวอักษร)"
+                    required 
+                />
+                <div class="password-requirements">
+                    ข้อกำหนด:
+                    <ul>
+                        <li>อย่างน้อย 6 ตัวอักษร</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirm">ยืนยันรหัสผ่าน <span class="required">*</span></label>
+                <input 
+                    type="password" 
+                    id="password_confirm" 
+                    name="password_confirm" 
+                    placeholder="ยืนยันรหัสผ่าน"
+                    required 
+                />
+            </div>
+
+            <button type="submit" class="register-button">สร้างบัญชี</button>
+        </form>
+
+        <div class="login-link">
+            <p>มีบัญชีอยู่แล้ว? <a href="{% url 'login' %}">ล็อกอินที่นี่</a></p>
+        </div>
+    </div>
+</body>
+</html>
