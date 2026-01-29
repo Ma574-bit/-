@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แจ้งซ่อม</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            margin-bottom: 40px;
+            border-radius: 10px;
+        }
+        
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .navbar h2 {
+            color: #667eea;
+            font-size: 1.5em;
+        }
+        
+        .navbar-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .navbar-links a {
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .navbar-links a:hover {
+            background: #f0f0f0;
+        }
+        
+        .navbar-links a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .navbar-links .logout-btn {
+            background: #ffebee;
+            color: #c33;
+        }
+        
+        .navbar-links .logout-btn:hover {
+            background: #ffcdd2;
+        }
+        
+        .navbar-user {
+            text-align: right;
+            font-size: 0.9em;
+        }
+        
+        .navbar-user p {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        h2 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 25px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .error-message {
+            background-color: #fee;
+            border-left: 4px solid #f44;
+            color: #c33;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .success-message {
+            background-color: #efe;
+            border-left: 4px solid #0a0;
+            color: #0a0;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+        
+        select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .btn-cancel {
+            background: #ddd;
+            color: #333;
+        }
+        
+        .btn-cancel:hover {
+            background: #ccc;
+        }
+        
+        .help-text {
+            font-size: 0.85em;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-content">
+            <h2>🔧 ระบบแจ้งซ่อมอุปกรณ์</h2>
+            <div style="display: flex; gap: 30px; align-items: center; width: 100%;">
+                <div class="navbar-links">
+                    <a href="{% url 'home' %}">หน้าหลัก</a>
+                    <a href="{% url 'repair_list' %}">รายการแจ้งซ่อม</a>
+                    <a href="{% url 'report' %}" class="active">แจ้งซ่อมใหม่</a>
+                </div>
+                <div class="navbar-user" style="margin-left: auto;">
+                    <p>👤 {{ user.first_name|default:user.username }}</p>
+                    <a href="{% url 'logout' %}" class="navbar-links" style="display: inline-block;">
+                        <span class="logout-btn">ออกจากระบบ</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>แจ้งซ่อมอุปกรณ์</h2>
+
+        {% if error %}
+        <div class="error-message">❌ {{ error }}</div>
+        {% endif %}
+
+        {% if success %}
+        <div class="success-message">✅ {{ success }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="equipment">อุปกรณ์ <span style="color: #f00;">*</span></label>
+                <select id="equipment" name="equipment" required onchange="handleEquipmentChange()">
+                    <option value="">-- เลือกอุปกรณ์ --</option>
+                    {% for eq in equipments %}
+                        <option value="{{ eq.id }}">{{ eq.name }} ({{ eq.location }})</option>
+                    {% endfor %}
+                    <option value="other">อื่น ๆ (ระบุเอง)</option>
+                </select>
+                <div class="help-text">กรุณาเลือกอุปกรณ์ที่ต้องการแจ้งซ่อม</div>
+            </div>
+
+            <div class="form-group" id="otherEquipmentGroup" style="display: none;">
+                <label for="otherEquipment">ชื่ออุปกรณ์อื่น ๆ</label>
+                <input type="text" id="otherEquipment" name="other_equipment" placeholder="ระบุชื่ออุปกรณ์" />
+                <div class="help-text">ระบุชื่อหรือประเภทของอุปกรณ์ที่ต้องการแจ้งซ่อม</div>
+            </div>
+
+            <div class="form-group" id="otherLocationGroup" style="display: none;">
+                <label for="otherLocation">สถานที่ตั้ง</label>
+                <input type="text" id="otherLocation" name="other_location" placeholder="ระบุสถานที่ตั้ง" />
+                <div class="help-text">ระบุสถานที่ตั้งของอุปกรณ์</div>
+            </div>
+
+            <div class="form-group">
+                <label for="detail">รายละเอียดการแจ้งซ่อม <span style="color: #f00;">*</span></label>
+                <textarea id="detail" name="detail" required placeholder="อธิบายปัญหาของอุปกรณ์อย่างละเอียด เช่น ขาดอะไรหรือเสีย อะไร"></textarea>
+                <div class="help-text">โปรดอธิบายปัญหาให้ชัดเจน เพื่อให้ทีมซ่อมสามารถแก้ไขได้ถูกต้อง</div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit">ยืนยันการแจ้งซ่อม</button>
+                <a href="{% url 'home' %}" style="text-decoration: none; padding: 14px; background: #ddd; color: #333; border: none; border-radius: 8px; font-size: 1.05em; font-weight: 600; text-align: center;">ยกเลิก</a>
+            </div>
+        </form>
+    <script>
+        function handleEquipmentChange() {
+            const equipmentSelect = document.getElementById('equipment');
+            const otherEquipmentGroup = document.getElementById('otherEquipmentGroup');
+            const otherLocationGroup = document.getElementById('otherLocationGroup');
+            const otherEquipment = document.getElementById('otherEquipment');
+            const otherLocation = document.getElementById('otherLocation');
+            
+            if (equipmentSelect.value === 'other') {
+                otherEquipmentGroup.style.display = 'block';
+                otherLocationGroup.style.display = 'block';
+                otherEquipment.required = true;
+                otherLocation.required = true;
+            } else {
+                otherEquipmentGroup.style.display = 'none';
+                otherLocationGroup.style.display = 'none';
+                otherEquipment.required = false;
+                otherLocation.required = false;
+                otherEquipment.value = '';
+                otherLocation.value = '';
+            }
+        }
+    </script>
+

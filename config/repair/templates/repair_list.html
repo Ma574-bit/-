@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายการแจ้งซ่อม</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            margin-bottom: 40px;
+            border-radius: 10px;
+        }
+        
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .navbar h2 {
+            color: #667eea;
+            font-size: 1.5em;
+        }
+        
+        .navbar-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .navbar-links a {
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .navbar-links a:hover {
+            background: #f0f0f0;
+        }
+        
+        .navbar-links a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .navbar-links .logout-btn {
+            background: #ffebee;
+            color: #c33;
+        }
+        
+        .navbar-links .logout-btn:hover {
+            background: #ffcdd2;
+        }
+        
+        .navbar-user {
+            text-align: right;
+            font-size: 0.9em;
+        }
+        
+        .navbar-user p {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-section label {
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .filter-section select {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+        
+        .filter-section select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .filter-section a {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+        
+        .filter-section a:hover {
+            transform: translateY(-2px);
+        }
+        
+        .repairs-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .repairs-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .repairs-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .repairs-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .repairs-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .repairs-table tbody tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #ffe6e6;
+            color: #cc0000;
+        }
+        
+        .status-completed {
+            background: #e6ffe6;
+            color: #00aa00;
+        }
+        
+        .status-in-progress {
+            background: #e6f2ff;
+            color: #0066cc;
+        }
+        
+        .repair-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .repair-link:hover {
+            text-decoration: underline;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+        }
+        
+        .empty-state p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .navbar-links {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .repairs-table {
+                font-size: 0.9em;
+            }
+            
+            .repairs-table th, .repairs-table td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-content">
+            <h2>🔧 ระบบแจ้งซ่อมอุปกรณ์</h2>
+            <div style="display: flex; gap: 30px; align-items: center; width: 100%;">
+                <div class="navbar-links">
+                    <a href="{% url 'home' %}">หน้าหลัก</a>
+                    <a href="{% url 'repair_list' %}" class="active">รายการแจ้งซ่อม</a>
+                    <a href="{% url 'report' %}">แจ้งซ่อมใหม่</a>
+                </div>
+                <div class="navbar-user" style="margin-left: auto;">
+                    <p>👤 {{ user.first_name|default:user.username }}</p>
+                    <a href="{% url 'logout' %}" class="navbar-links" style="display: inline-block;">
+                        <span class="logout-btn">ออกจากระบบ</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>รายการแจ้งซ่อม</h1>
+            <div class="filter-section">
+                <label for="status-filter">กรองตามสถานะ:</label>
+                <select id="status-filter" onchange="filterByStatus()">
+                    <option value="">-- ทั้งหมด --</option>
+                    {% for status in statuses %}
+                        <option value="{{ status.id }}" {% if selected_status == status.id|stringformat:"s" %}selected{% endif %}>
+                            {{ status.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                {% if selected_status %}
+                    <a href="{% url 'repair_list' %}">ล้างตัวกรอง</a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if repairs %}
+        <div class="repairs-section">
+            <table class="repairs-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>อุปกรณ์</th>
+                        <th>ผู้แจ้ง</th>
+                        <th>วันที่</th>
+                        <th>สถานะ</th>
+                        <th>การกระทำ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for repair in repairs %}
+                    <tr>
+                        <td>#{{ repair.id }}</td>
+                        <td>{{ repair.equipment.name }}<br><small style="color:#999;">{{ repair.equipment.location }}</small></td>
+                        <td>{{ repair.user.username }}</td>
+                        <td>{{ repair.repair_date|date:"d/m/Y" }}</td>
+                        <td>
+                            {% if repair.status.name == 'รอซ่อม' %}
+                                <span class="status-badge status-pending">{{ repair.status.name }}</span>
+                            {% elif repair.status.name == 'ซ่อมเสร็จ' or repair.status.name == 'ซ่อมเสร็จแล้ว' %}
+                                <span class="status-badge status-completed">{{ repair.status.name }}</span>
+                            {% else %}
+                                <span class="status-badge status-in-progress">{{ repair.status.name }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'repair_detail' repair.id %}" class="repair-link">ดูรายละเอียด</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="repairs-section">
+            <div class="empty-state">
+                <p>ไม่พบการแจ้งซ่อม</p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function filterByStatus() {
+            const select = document.getElementById('status-filter');
+            const statusId = select.value;
+            if (statusId) {
+                window.location.href = '?status=' + statusId;
+            } else {
+                window.location.href = '{% url "repair_list" %}';
+            }
+        }
+    </script>
+</body>
+</html>
